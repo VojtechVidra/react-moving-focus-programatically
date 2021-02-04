@@ -1,40 +1,49 @@
 import { memo, useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Item } from "./item";
-import { useSetFocus } from "./useSetFocus";
 
 interface Props {
   focus?: boolean;
   focusIndex?: number;
   data: Item;
-  onSelect(item: Item): void;
   onFocus(focusIndex: number): void;
+  onClick?(item: Item): void;
 }
 
 export const ListItem = memo(
-  ({ focus, focusIndex, data, onSelect, onFocus }: Props) => {
+  ({ focus, focusIndex, data, onFocus, onClick }: Props) => {
     const ref = useRef<HTMLLIElement>(null);
-    useSetFocus({ focus, ref });
 
     useEffect(() => {
       if (!focus) return;
 
-      onSelect(data);
-    }, [focus, onSelect, data]);
+      ref.current?.scrollIntoView({ block: "nearest" });
+    }, [focus]);
 
     const handleMouseOver = useCallback(() => {
-      onSelect(data);
-      focusIndex && onFocus(focusIndex);
-    }, [onSelect, data, focusIndex, onFocus]);
+      focusIndex !== undefined && onFocus(focusIndex);
+    }, [focusIndex, onFocus]);
+
+    const handleClick = useCallback(() => onClick && onClick(data), [
+      onClick,
+      data,
+    ]);
 
     return (
-      <SLi onMouseOver={handleMouseOver} ref={ref}>
+      <SLi
+        focused={focus}
+        onMouseOver={handleMouseOver}
+        onClick={handleClick}
+        ref={ref}
+      >
         {data.title}
       </SLi>
     );
   }
 );
 
-const SLi = styled.li`
+const SLi = styled.li<{ focused?: boolean }>`
   padding: 8px;
+  cursor: pointer;
+  color: ${({ focused }) => (focused ? "red" : undefined)};
 `;

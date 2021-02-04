@@ -12,9 +12,11 @@ export const useFocus = ({ itemsLength, initialFocus = 0, rootRef }: Props) => {
     const target = rootRef?.current;
     const handleKeydown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown") {
+        e.preventDefault();
         if (currentFocus === itemsLength - 1) return setCurrentFocus(0);
         setCurrentFocus((prev) => ++prev);
       } else if (e.key === "ArrowUp") {
+        e.preventDefault();
         if (currentFocus === 0) return setCurrentFocus(itemsLength - 1);
         setCurrentFocus((prev) => --prev);
       }

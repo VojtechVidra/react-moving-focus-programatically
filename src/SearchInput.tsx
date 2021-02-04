@@ -1,19 +1,18 @@
-import { useRef } from "react";
-import { useSetFocus } from "./useSetFocus";
-
 interface Props {
-  focus?: boolean;
+  onClick?(): void;
 }
 
-export const SearchInput = ({ focus }: Props) => {
-  const ref = useRef<HTMLInputElement>(null);
-  useSetFocus({ focus, ref });
-
+export const SearchInput = ({ onClick }: Props) => {
   return (
     <>
       <label htmlFor="search">Search</label>
       <br />
-      <input ref={ref} id="search" placeholder="search.." />
+      <input
+        onClick={onClick}
+        id="search"
+        placeholder="search.."
+        autoComplete="off"
+      />
     </>
   );
 };
